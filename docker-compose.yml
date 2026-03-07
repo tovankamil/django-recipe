@@ -1,4 +1,4 @@
-version: '3.8'
+# Hapus "version: '3.8'" - sudah obsolete di Docker Compose v2
 
 services:
   db:
@@ -25,6 +25,11 @@ services:
       - "6379:6379"
     volumes:
       - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   web:
     build:
@@ -41,7 +46,7 @@ services:
       - "8000:8000"
     environment:
       - DEBUG=${DEBUG:-True}
-      - SECRET_KEY=${SECRET_KEY:-your-secret-key-change-in-production}
+      - SECRET_KEY=${SECRET_KEY:-django-secret-key}
       - DB_HOST=db
       - DB_NAME=${DB_NAME:-django_db}
       - DB_USER=${DB_USER:-django_user}
@@ -52,19 +57,21 @@ services:
       db:
         condition: service_healthy
       redis:
-        condition: service_started
+        condition: service_healthy
 
   celery:
     build:
       context: ./app
       dockerfile: ../Dockerfile
     container_name: django_celery
-    command: celery -A config worker -l info
+    command: >
+      sh -c "celery -A config worker -l  info -P prefork"
     volumes:
       - ./app:/app
     environment:
+      - DJANGO_SETTINGS_MODULE=config.settings
       - DEBUG=${DEBUG:-True}
-      - SECRET_KEY=${SECRET_KEY:-your-secret-key-change-in-production}
+      - SECRET_KEY=${SECRET_KEY:-django-secret-key}
       - DB_HOST=db
       - DB_NAME=${DB_NAME:-django_db}
       - DB_USER=${DB_USER:-django_user}
@@ -72,20 +79,24 @@ services:
       - REDIS_URL=redis://redis:6379/0
       - CELERY_BROKER_URL=redis://redis:6379/0
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
 
   celery-beat:
     build:
       context: ./app
       dockerfile: ../Dockerfile
     container_name: django_celery_beat
-    command: celery -A config beat -l info
+    command: >
+      sh -c "celery -A config beat -l info"
     volumes:
       - ./app:/app
     environment:
+      - DJANGO_SETTINGS_MODULE=config.settings
       - DEBUG=${DEBUG:-True}
-      - SECRET_KEY=${SECRET_KEY:-your-secret-key-change-in-production}
+      - SECRET_KEY=${SECRET_KEY:-django-secret-key}
       - DB_HOST=db
       - DB_NAME=${DB_NAME:-django_db}
       - DB_USER=${DB_USER:-django_user}
@@ -95,6 +106,7 @@ services:
     depends_on:
       - db
       - redis
+      - celery
 
 volumes:
   postgres_data:
