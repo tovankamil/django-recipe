@@ -1,14 +1,11 @@
 import uuid
 from django.db import models
 from .role_model import Role
+from django.contrib.auth.models import AbstractUser, PermissionsMixin
 
 
-class User(models.Model):
+class User(AbstractUser, PermissionsMixin):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    email = models.EmailField(unique=True, max_length=254)
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-
     role = models.ForeignKey(Role, on_delete=models.PROTECT)
 
     class Meta:

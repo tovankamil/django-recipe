@@ -1,17 +1,14 @@
 from .role_entity import (
-    BaseEntity,
-    UserEntity,
     RoleEntity,
-    UserRoleEntity,
     PermissionEntity,
-    RolePermissionEntity,
+)
+
+from .user_entity import (
+    UserEntity,
 )
 
 __all__ = [
-    "BaseEntity",
     "UserEntity",
     "RoleEntity",
-    "UserRoleEntity",
     "PermissionEntity",
-    "RolePermissionEntity",
 ]
