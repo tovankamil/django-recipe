@@ -1,4 +1,3 @@
-from abc import ABC, abstractmethod
 from typing import List, Optional
 import uuid
 from datetime import datetime
@@ -55,7 +54,13 @@ class RoleEntity(BaseEntity):
 
 
 class UserRoleEntity(BaseEntity):
-    def __init__(self, user_id = uuid.UUID, role_id: uuid.UUID, assigned_by :  Optional[uuid.UUID] =None ,id:Optional[uuid.UUID]= None):
+    def __init__(
+        self,
+        user_id: uuid.UUID,
+        role_id: uuid.UUID,
+        assigned_by: Optional[uuid.UUID] = None,
+        id: Optional[uuid.UUID] = None,
+    ):
         super().__init__(id)
         self.user_id = user_id
         self.role_id = role_id
@@ -75,13 +80,15 @@ class PermissionEntity(BaseEntity):
         self.name = name
         self.codename = codename
         self.description = description
-    
+
     class RolePermissionEntity(BaseEntity):
-        def __init__(self, 
-                    role_id: uuid.UUID, 
-                    permission_id: uuid.UUID, 
-                    granted_by: Optional[uuid.UUID] = None, 
-                    id: Optional[uuid.UUID] = None):
+        def __init__(
+            self,
+            role_id: uuid.UUID,
+            permission_id: uuid.UUID,
+            granted_by: Optional[uuid.UUID] = None,
+            id: Optional[uuid.UUID] = None,
+        ):
             super().__init__(id)
             self.role_id = role_id
             self.permission_id = permission_id
