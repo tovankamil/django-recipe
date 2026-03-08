@@ -18,3 +18,4 @@ class RolePermission(models.Model):
                 fields=["role", "permission"], name="unique_role_permission"
             )
         ]
+        indexes = [models.Index(fields=["role", "permission"])]

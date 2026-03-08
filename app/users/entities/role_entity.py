@@ -13,4 +13,4 @@ class PermissionEntity:
 class RoleEntity:
     id: uuid.UUID
     name: str
-    permissionEntity: List[PermissionEntity]
+    permission: List[PermissionEntity]

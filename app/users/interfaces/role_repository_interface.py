@@ -1,5 +1,5 @@
 import uuid
-from typing import Optional
+from typing import Optional, List, Tuple
 from abc import ABC, abstractmethod
 from ..entities.role_entity import RoleEntity
 
@@ -24,4 +24,8 @@ class IRoleRepository(ABC):
 
     @abstractmethod
     def get_by_name(self, name: str) -> Optional[RoleEntity]:
+        pass
+
+    @abstractmethod
+    def list(self, page: int, page_size: int) -> Tuple[List[RoleEntity], int]:
         pass
