@@ -350,3 +350,11 @@ atau gunakan tools monitoring seperti:
 ```
 
 ---
+
+
+ python -m pytest app/users/tests.py -v
+
+ ### Coverage 
+  coverage run --source=app/users/ -m pytest app/users/tests.py && coverage report
+
+  coverage html

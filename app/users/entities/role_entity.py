@@ -6,7 +6,7 @@ from datetime import datetime
 class BaseEntity:
 
     def __init__(self, id: Optional[uuid.UUID] = None):
-        self.id = uuid.uuid4()
+        self.id = id if id is not None else uuid.uuid4()
         self.created_at = datetime.now()
         self.updated_at = datetime.now()
 
@@ -40,7 +40,7 @@ class UserEntity(BaseEntity):
 
 
 class RoleEntity(BaseEntity):
-    def __int__(
+    def __init__(
         self,
         name: str,
         description: str = "",
@@ -48,8 +48,8 @@ class RoleEntity(BaseEntity):
         id: Optional[uuid.UUID] = None,
     ):
         super().__init__(id)
-        self.name = (name,)
-        self.description = (description,)
+        self.name = name
+        self.description = description
         self.is_active = is_active
 
 
@@ -81,16 +81,17 @@ class PermissionEntity(BaseEntity):
         self.codename = codename
         self.description = description
 
-    class RolePermissionEntity(BaseEntity):
-        def __init__(
-            self,
-            role_id: uuid.UUID,
-            permission_id: uuid.UUID,
-            granted_by: Optional[uuid.UUID] = None,
-            id: Optional[uuid.UUID] = None,
-        ):
-            super().__init__(id)
-            self.role_id = role_id
-            self.permission_id = permission_id
-            self.granted_by = granted_by
-            self.granted_at = datetime.now()
+
+class RolePermissionEntity(BaseEntity):
+    def __init__(
+        self,
+        role_id: uuid.UUID,
+        permission_id: uuid.UUID,
+        granted_by: Optional[uuid.UUID] = None,
+        id: Optional[uuid.UUID] = None,
+    ):
+        super().__init__(id)
+        self.role_id = role_id
+        self.permission_id = permission_id
+        self.granted_by = granted_by
+        self.granted_at = datetime.now()
