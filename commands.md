@@ -350,3 +350,40 @@ atau gunakan tools monitoring seperti:
 ```
 
 ---
+
+
+### test unit 
+### create pytest.ini
+
+add :
+ [pytest]
+DJANGO_SETTINGS_MODULE = app.config.settings
+pythonpath = .
+
+### run unit test
+run "pytest" from folder django-recipe
+
+### run coverage test
+
+pytest --cov=app.users
+
+### the output show files have not tested:
+pytest --cov=app --cov-report=term-missing
+
+
+### check manage.py configuration
+
+python manage.py check
+
+
+### make migrate file model users
+
+python manage.py makemigrations users
+
+### show migrations 
+
+python manage.py showmigrations
+
+### run migrations
+
+python manage.py migrate
